@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<body>
+<a class="leave-room-btn" href="{% url 'chat-index' %}">Leave Room</a>
+    <!-- Append Child MESSAGE element every time chat-message is sent -->
+<div class="chat-container">
+    <div id="chat-log">
+    </div>
+</div>
+
+<div class="chat-container">
+    <input class="chat-msg-input" id="chat-message-input" type="text" size="50"><br>
+    <input class="chat-msg-button" id="chat-message-submit" type="button" value="Send"> 
+</div>
+        
+        <!-- <div class="sender"></div>
+        <div class="reciever"></div> -->
+        
+        <!-- 
+        <form id="chatForm" action="" method="post"> {csrf_token %}
+
+            <input id="chat-message-input" type="text" size="50"><br>
+            <input id="chat-message-submit" type="button" value="Send">
+    
+        </form> -->
+
+
+    {{ room_name|json_script:"room-name" }}
+    {{ request.user.id|json_script:"request_user_id"}}
+    
+    <script src="{% static 'chat/js/msg_room.js' %}"></script>
+</body>
+{% endblock %}
+
+<!-- block js_content %} 
+    % endblock %}
+-->
