@@ -36,12 +36,13 @@ def room_index(request):
         })
 
 
-
+# from django_redis import get
 # create-rooms
 def room(request, room_name:str):
     # print(f"Req.Method: {request}")
     return render(request, 'chat/msg_room.html', { 
         'room_name': room_name,
+        'user_list': User.objects.exclude(username=request.user.username),
         'user_name': request.user.username,
     })
 

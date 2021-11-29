@@ -2,21 +2,57 @@
 {% load static %}
 {% block content %}
 <body>
-<a class="leave-room-btn" href="{% url 'chat-index' %}">Leave Room</a>
-    <!-- Append Child MESSAGE element every time chat-message is sent -->
-<div class="chat-container">
-    <div id="chat-log">
+    <div class="card-header">
+        <h1>Waiting Room </h1>
     </div>
-</div>
 
-<div class="chat-container">
-    <input class="chat-msg-input" id="chat-message-input" type="text" size="50"><br>
-    <input class="chat-msg-button" id="chat-message-submit" type="button" value="Send"> 
-</div>
+    <div class="row">
+        <div class="col-8">
+            
+            <a class="leave-room-btn" href="{% url 'chat-index' %}">Leave Room</a>
+            <!-- Append Child MESSAGE element every time chat-message is sent -->
+            <div class="chat-container">
+                <div id="chat-log">
+                </div>
+            </div>
+            
+            <div class="chat-container">
+                <input class="chat-msg-input" id="chat-message-input" type="text" size="50"><br>
+                <input class="chat-msg-button" id="chat-message-submit" type="button" value="Send"> 
+            </div>
+        </div>
         
-        <!-- <div class="sender"></div>
+        <!-- Sidebar -->
+        <div class="col-4">
+            <div class="list-group"> 
+                
+                <h2>Queue
+                    <hr>
+                </h2>
+                {% for user in user_list %}
+                <div class="profile_avatar">
+                    <div id="waiting_queue" class="avatar avatar--small">
+                        <!-- <a id="waiting_user" href="" class="list-group-item list-group-item-action">
+                            
+                            <span class="badge badge-light">9</span> 
+                             {{ user}} 
+                            
+                            <span class="sr-only">unread messages</span>
+                        </a> -->
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- End List-Group -->
+            
+        </div>
+        <!-- End Sidebar -->
+        
+    </div>
+    <!-- End Row-1 -->
+    <!-- <div class="sender"></div>
         <div class="reciever"></div> -->
-        
+
         <!-- 
         <form id="chatForm" action="" method="post"> {csrf_token %}
 
@@ -24,7 +60,6 @@
             <input id="chat-message-submit" type="button" value="Send">
     
         </form> -->
-
 
     {{ room_name|json_script:"room-name" }}
     {{ request.user.id|json_script:"request_user_id"}}

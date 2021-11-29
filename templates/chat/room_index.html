@@ -9,6 +9,7 @@
 
                 <!-- <div class="container">
                 </div> -->
+        
 
                     <div class="card">
                         <div class="card-header">
@@ -26,17 +27,28 @@
                     </div>
              
             <br><br>
-            <h5>My Rooms
-                <hr>
-            </h5>
-            <div class="list-group">                    
-                {% for room in chat_rooms %}
-                <!-- /chat/rooms/id/{{room.id}} -->
-                        <a href="/chat/rooms/{{ room.name }}" class="list-group-item list-group-item-action">
-                            {{ room.name }}
-                        </a>
-                {% endfor %}
+            <div class="col">
+
+                <h5>My Rooms
+                    <hr>
+                </h5>
+                <div class="list-group">                    
+                    {% for room in chat_rooms %}
+                    <!-- /chat/rooms/id/{{room.id}} -->
+                    <a href="/chat/rooms/{{ room.name }}" class="list-group-item list-group-item-action">
+                        {{ room.name }}
+                    </a>
+                    {% endfor %}
+                </div>
             </div>
+            <!-- <div class="col"> -->
+                <h5>Games: <hr></h5>
+                <div class="list-group"> 
+                    <a href="" class="list-group-item list-group-item-action">
+                        chess-game
+                    </a>
+                </div>
+            <!-- </div> -->
         </div>
 
         <!-- Sidebar of Friends/Users -->

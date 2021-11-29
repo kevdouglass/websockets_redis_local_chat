@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def home( request ):
+    # "user1"+"-"+"user2"
     return render(request, 'core/home.html', {})
 
 
