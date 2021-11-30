@@ -31,34 +31,14 @@ const chatSocket = new WebSocket(
 );
 chatSocket.onopen = function(ws_event){
     // if self.postMessage
-    // const data = JSON.parse(ws_event)
-    console.log("\n\nws.onOpen() EVENT:", ws_event  )
-    // const data  = {'user_username':'Testicles', 'user_id':-99} //JSON.parse(ws_event.data);
-    // const user_username = data['user_username']
-    // const user_user_id = data['user_id']
-    // logged_in_user_id = JSON.parse(document.getElementById('request_user_id').textContent);
+    console.log("\n\nws.onOpen() EVENT:", ws_event  )    // logged_in_user_id = JSON.parse(document.getElementById('request_user_id').textContent);
     const logged_in_user_id = JSON.parse(document.getElementById('request_user_id').textContent);
-        // if (chatSocket.protocol == chatSocket.OPEN){
-        // }
-        // console.warn("\n\n*Logged in User: "+ (user_user_id===logged_in_user_id ? ("Username: "+user_username) : "Unknown User" ))
-        const waitingUserQueueDiv = document.getElementById('waiting_queue');
-        // const waitingUserNode = document.getElementById('waiting_user');
-        console.log("Waiting Users: ");
-        // for (let idx in all_other_users){ 
-        //     var waiting_user = all_other_users[idx]['user']
-        //     var waiting_user_id = waiting_user['id'];
-        //     var waiting_user_username = waiting_user['username'];
-        //     console.log(waiting_user['id'], waiting_user['username']);
 
+        const waitingUserQueueDiv = document.getElementById('waiting_queue');
         var waitingUserNode = document.createElement('a');
         waitingUserNode.innerText = JSON.stringify(logged_in_user_id) + "\n";
         waitingUserNode.classList.add('list-group-item', 'list-group-item-action');
         waitingUserQueueDiv.appendChild(waitingUserNode);
-        // }
-        console.warn("Logged_in_User_id: ", JSON.stringify(logged_in_user_id))
-        // chatSocket.send(JSON.stringify({
-        //         'waitingQ_broadcast': logged_in_user_id,
-        //     }))
 
 }
 
@@ -70,27 +50,29 @@ chatSocket.onmessage = function(event) {
     const data = JSON.parse(event.data);
     // if (data['chat_msg']){
     // }
+    
 
         const messageNode = document.createElement('div');
         const user_username = data['user_username']
         const user_user_id = data['user_id']
+        const waiting_queue_users = data['user_queue_nodes'];
+
         const logged_in_user_id = JSON.parse(document.getElementById('request_user_id').textContent);
-        const all_other_users = data['all_other_users'];
-        // const waitingUserQueueDiv = document.getElementById('waiting_queue');
-        // // const waitingUserNode = document.getElementById('waiting_user');
-        // console.log("Waiting Users: ");
-        // // for (var i = 0; i < all_other_users.length ; i++){
-        //     for (let idx in all_other_users){ 
-        //         var waiting_user = all_other_users[idx]['user']
-        //         var waiting_user_id = waiting_user['id'];
-        //         var waiting_user_username = waiting_user['username'];
-        //         console.log(waiting_user['id'], waiting_user['username']);
+        // const all_other_users = data['all_other_users'];
+        const waitingUserQueueDiv = document.getElementById('waiting_queue');
+        // const waitingUserNode = document.getElementById('waiting_user');
+        console.log("Waiting Users: \n", waiting_queue_users);
+            // for (let idx in all_other_users){ 
+            //     var waiting_user = all_other_users[idx]['user']
+            //     var waiting_user_id = waiting_user['id'];
+            //     var waiting_user_username = waiting_user['username'];
+            //     console.log(waiting_user['id'], waiting_user['username']);
                 
-        //         var waitingUserNode = document.createElement('a');
-        //         waitingUserNode.innerText = JSON.stringify(waiting_user) + "\n";
-        //         waitingUserNode.classList.add('list-group-item', 'list-group-item-action');
-        //         waitingUserQueueDiv.appendChild(waitingUserNode);
-        //     }
+            //     var waitingUserNode = document.createElement('a');
+            //     waitingUserNode.innerText = JSON.stringify(waiting_user) + "\n";
+            //     waitingUserNode.classList.add('list-group-item', 'list-group-item-action');
+            //     waitingUserQueueDiv.appendChild(waitingUserNode);
+            // }
             
             // }
             // var waiting_user = all_other_users[i];

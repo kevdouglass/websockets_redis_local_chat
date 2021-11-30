@@ -13,9 +13,16 @@ class Room(models.Model):
 
 class Message(models.Model):
     """
+        PARAMS:
+        ------
+            user,
+            room,
+            content,
+            timestamp(Optional)
+        -------------------
         A Room can have MANY messages,
         A User can have MANY messages
-        
+
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, blank=True, null=True)
