@@ -17,8 +17,21 @@
             </div>
             
             <div class="chat-container">
+                {% if request.user.is_authenticated %}
                 <input class="chat-msg-input" id="chat-message-input" type="text" size="50"><br>
                 <input class="chat-msg-button" id="chat-message-submit" type="button" value="Send"> 
+                {{ request.user.id|json_script:"request_user_id"}}
+                {{ request.user.username|json_script:"request_user_username"}}
+                {{ request.user.is_authenticated|json_script:"user_isAuthenticated"}}
+                
+                <script>
+                    console.log(JSON.parse(document.getElementById('request_user_username').textContent))
+                    console.log("isAuth: ", JSON.parse(document.getElementById('user_isAuthenticated').textContent))
+                </script>
+                {% else %}
+                <!-- Prompt to login/Signup -->
+                    {% include 'core/components/login_card.html' %}
+                {% endif %}
             </div>
         </div>
         
@@ -32,37 +45,18 @@
                 {% for user in user_list %}
                 <div class="profile_avatar">
                     <div id="waiting_queue" class="avatar avatar--small">
-                        <!-- <a id="waiting_user" href="" class="list-group-item list-group-item-action">
-                            
-                            <span class="badge badge-light">9</span> 
-                             {{ user}} 
-                            
-                            <span class="sr-only">unread messages</span>
-                        </a> -->
                     </div>
                 </div>
                 {% endfor %}
             </div>
             <!-- End List-Group -->
-            
         </div>
-        <!-- End Sidebar -->
-        
+        <!-- End Sidebar -->        
     </div>
     <!-- End Row-1 -->
-    <!-- <div class="sender"></div>
-        <div class="reciever"></div> -->
 
-        <!-- 
-        <form id="chatForm" action="" method="post"> {csrf_token %}
-
-            <input id="chat-message-input" type="text" size="50"><br>
-            <input id="chat-message-submit" type="button" value="Send">
-    
-        </form> -->
 
     {{ room_name|json_script:"room-name" }}
-    {{ request.user.id|json_script:"request_user_id"}}
     
     <script src="{% static 'chat/js/msg_room.js' %}"></script>
 </body>

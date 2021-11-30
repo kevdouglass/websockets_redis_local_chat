@@ -1,6 +1,7 @@
 const roomName = JSON.parse(document.getElementById('room-name').textContent);
 const chatLog = document.getElementById("chat-log");
 //this_user-name
+var user_username = undefined;
 console.warn("New Room Name: {"+ roomName +"}");
 
 /** TODO */
@@ -21,8 +22,21 @@ const BASE_URL = "ws://"+window.location.host;
 const ENDPOINT = "/ws/chat/rooms/";
 // const chatSocket = new WebSocket( BASE_URL+ENDPOINT+roomName+"/" );
 // console.log("New ChatSocket(", BASE_URL+ENDPOINT+roomName+"/" ,")")
+class ClientsList {
+    constructor() {
+        console.log("New Client!");
+        this.client_list = {};
+        this.saveClient = this.setSavedClient.bind(this);
+    }
+    setSavedClient(username, client){
+        console.log("[",client,"]: \tSaving User: ", username, " to ClientList")
+        this.client_list[ username ] = client;
+    }
+}
 
 // var chatForm = document.getElementById('chatForm')
+const clients = new ClientsList();
+var client_from_backend = undefined;
 
 const chatSocket = new WebSocket(
     BASE_URL +
@@ -31,7 +45,9 @@ const chatSocket = new WebSocket(
 );
 chatSocket.onopen = function(ws_event){
     // if self.postMessage
-    console.log("\n\nws.onOpen() EVENT:", ws_event  )    // logged_in_user_id = JSON.parse(document.getElementById('request_user_id').textContent);
+    client_from_backend = ws_event;
+
+    // console.log("\n\nws.onOpen() EVENT:", ws_event  )    // logged_in_user_id = JSON.parse(document.getElementById('request_user_id').textContent);
     const logged_in_user_id = JSON.parse(document.getElementById('request_user_id').textContent);
 
         const waitingUserQueueDiv = document.getElementById('waiting_queue');
@@ -41,19 +57,25 @@ chatSocket.onopen = function(ws_event){
         waitingUserQueueDiv.appendChild(waitingUserNode);
 
 }
+// chatSocket.co
 
 // once client side wS recieves a message,
 chatSocket.onmessage = function(event) {
     /** When user sends message through input field, create new div element and send to other Ws functions */
-    
+    // chatSocket.co
     console.log("onMessage: ", event)
     const data = JSON.parse(event.data);
+    
+    clients.setSavedClient(data['user_username'], chatSocket );
+    console.log("Clients: ", clients);
+    
+    //console
     // if (data['chat_msg']){
     // }
     
 
         const messageNode = document.createElement('div');
-        const user_username = data['user_username']
+        user_username = data['user_username']
         const user_user_id = data['user_id']
         const waiting_queue_users = data['user_queue_nodes'];
 
@@ -61,7 +83,7 @@ chatSocket.onmessage = function(event) {
         // const all_other_users = data['all_other_users'];
         const waitingUserQueueDiv = document.getElementById('waiting_queue');
         // const waitingUserNode = document.getElementById('waiting_user');
-        console.log("Waiting Users: \n", waiting_queue_users);
+        // console.log("Waiting Users: \n", waiting_queue_users);
             // for (let idx in all_other_users){ 
             //     var waiting_user = all_other_users[idx]['user']
             //     var waiting_user_id = waiting_user['id'];
@@ -73,7 +95,6 @@ chatSocket.onmessage = function(event) {
             //     waitingUserNode.classList.add('list-group-item', 'list-group-item-action');
             //     waitingUserQueueDiv.appendChild(waitingUserNode);
             // }
-            
             // }
             // var waiting_user = all_other_users[i];
             // waitingUserNode.innerText = (all_other_users)
@@ -92,21 +113,13 @@ chatSocket.onmessage = function(event) {
         messageNode.classList.add('message', 'receiver');
     }
     chatLog.appendChild( messageNode );
-    
-    console.log("WS.onMessage() : {BEGIN}\n\n")
-    console.log("User_id: ", JSON.stringify(user_user_id))
-    console.log("Username: " , JSON.stringify(user_username));
-    
+
     console.log("WS.onMessage() : {END}")
     if (document.getElementById('emptyTextNode')){
         document.getElementById('emptyTextNode').remove();
     }
 }
-// chatSocket.onmessage = function(e) {
-//     const data = JSON.parse(e.data);
-//     console.log("Client Message-event, ", data);
-//     document.querySelector('#chat-log').value += (data.message + '\n');
-// };
+
 
 chatSocket.onclose = function(e) {
     console.error('Chat socket closed unexpectedly');
@@ -123,11 +136,18 @@ document.querySelector('#chat-message-submit').onclick = function(e) {
     const messageInputDom = document.querySelector('#chat-message-input');
     const message = messageInputDom.value;
     const request_user_id = JSON.parse(document.getElementById('request_user_id').textContent)
+    const request_user_username = JSON.parse(document.getElementById('request_user_username').textContent)
+
     // print("Sending MESSAGE + USER to BACKEND.")
     // 'user_username' : user_username,
-    chatSocket.send(JSON.stringify({
-        'message': message, 
-        'waiting_queue_users': request_user_id, 
-    }));
+    console.log("chatSocket, ",chatSocket)
+    console.log("clients: ",clients);
+    // clients[user_username].send(JSON.stringify({
+    //   'message': "Tessssssstttt12344",  
+    // }));
+    // chatSocket.send(JSON.stringify({
+    //     'message': message, 
+    //     // 'waiting_queue_users': request_user_id, 
+    // }));
     messageInputDom.value = '';
 };

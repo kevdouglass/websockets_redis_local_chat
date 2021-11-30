@@ -51,7 +51,7 @@ class ChatMessageConsumer( AsyncWebsocketConsumer ):
         savedChatHash = []
         for chat in message_list:
             savedChatHash.append({'user':{'id': chat.user.id, 'username':chat.user.username}, 'room':{'id':chat.room.id, 'name':chat.room.name}, 'content':chat.content})
-        print("chatHash--Message List: {}".format(savedChatHash)) 
+        # print("chatHash--Message List: {}".format(savedChatHash)) 
 
         return savedChatHash
 
@@ -106,8 +106,8 @@ class ChatMessageConsumer( AsyncWebsocketConsumer ):
         if this_room_name not in self.user_queue:
             self.user_queue[this_room_name] = []
 
-            print("Waiting Queue: ", self.user_queue)
-            print("User.is_authenticated When Room:{} == Room:{}".format(self.room_name,this_room.name ))
+            # print("Waiting Queue: ", self.user_queue)
+            # print("User.is_authenticated When Room:{} == Room:{}".format(self.room_name,this_room.name ))
             if user.username not in self.user_queue[this_room_name]:
                 print(f"****\n\t\tAdding {str(user)} to UserQueue!!\n")
                 self.user_queue[this_room_name].append(user.username)
@@ -115,7 +115,7 @@ class ChatMessageConsumer( AsyncWebsocketConsumer ):
         
 
     async def display_user_queue(self):
-        print("\n\n***\tDisplay_user_queue!\n")
+        # print("\n\n***\tDisplay_user_queue!\n")
         for item in self.user_queue:
             print(item)
 
@@ -136,12 +136,12 @@ class ChatMessageConsumer( AsyncWebsocketConsumer ):
         
         await self.enqueue_user(self.scope['user'], None)
         print("Now: ", self.user_queue)
-        await self.channel_layer.group_send(
-            self.room_group_name, {
-                "type": "user_broadcast",
-                "user_queue_nodes": self.user_queue,
-            }
-        )
+        # await self.channel_layer.group_send(
+        #     self.room_group_name, {
+        #         "type": "user_broadcast",
+        #         "user_queue_nodes": self.user_queue,
+        #     }
+        # )
         await self.accept()
 
 
@@ -160,13 +160,11 @@ class ChatMessageConsumer( AsyncWebsocketConsumer ):
         '''Receive message FROM WS:'''
         '''calls group_send message after determining which command waas called'''
         print("(2) Django.Receive")
-        print(f"Channel info (RECEIVE): {self.groups}")
         text_data_json = json.loads(text_data)
+        print(f"Channel info (RECEIVE): {text_data_json}")
         await self.new_message(text_data_json['message'])
         this_room_name = await self.get_current_room(self.room_name)
         saved_chatroom_messages = await self.fetch_saved_messages(this_room_name)
-        print("before.room_name: {}".format(self.room_name))
-        print("receive.this_room_name = {}".format(this_room_name))
      
         # all_user_sessions = await self.get_all_logged_in_user_sessions(self.user.username)
         # print("SHOW All other Users: ".format(all_user_sessions))
@@ -180,25 +178,24 @@ class ChatMessageConsumer( AsyncWebsocketConsumer ):
                 'message': text_data_json['message'],
                 'user_id' : self.user_id,
                 'user_username' : self.user.username,
-                'user_queue_nodes':self.user_queue,
+                # 'user_queue_nodes':self.user_queue,
                 # 'all_other_users' : self.all_other_users,
             }
         )
 
     async def chat_message(self, event):
         '''Receives messages from our Group'''
-        print("send-EVENT: \n{}".format(event))
+        # print("send-EVENT: \n{}".format(event))
         # Send message to WS 
         await self.send(text_data=json.dumps({ 
             'message' : event['message'],
             'user_id' : event['user_id'],
             'user_username': event['user_username'],
-            'user_queue_nodes': event['user_queue_nodes'],
+
+            # 'user_queue_nodes': event['user_queue_nodes'],
             # 'all_other_users' : event['all_other_users']
         }))
     
-    def get_username(self):
-        return User.objects.all()[0].name
 
     
 
@@ -213,6 +210,7 @@ class ChatMessageConsumer( AsyncWebsocketConsumer ):
         await self.send(text_data=json.dumps({ 
             'user_queue_nodes' : event['user_queue_nodes'],
         }))
+        # self.groups
         # isUser = True
         # print("= new WebSocket.Connection: Channel.user_broadcast(): ")
         # print("Broadcast.EVENT: ")
